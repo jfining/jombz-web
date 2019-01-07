@@ -41,7 +41,6 @@
 
         $(document).on('click', '.btn-add', addFormGroup);
         $(document).on('click', '.btn-remove', removeFormGroup);
-
     });
 })(jQuery);
 

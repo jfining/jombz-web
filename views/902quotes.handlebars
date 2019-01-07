@@ -2,14 +2,24 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-    	    <form>
+    	    <form id="quote-form" method="POST" action="/902quotes">
                 <div class="form-group multiple-form-group">
                     <label>Add and remove quotes from the 902 Quotes Alexa Skill</label>
-                    <div class="form-group input-group">
-                        <input type="text" name="multiple[]" class="form-control">
-                            <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span>
-                    </div>
+                    {{#each quotesArray}}
+                        {{#if @last}}
+                            <div class="form-group input-group">
+                                <input type="text" name="quotes[]" class="form-control" value="{{this}}">
+                                <span class="input-group-btn"><button type="button" class="btn btn-default btn-add">+</button></span>
+                            </div>
+                        {{else}}
+                            <div class="form-group input-group">
+                                <input type="text" name="quotes[]" class="form-control" value="{{this}}">
+                                <span class="input-group-btn"><button type="button" class="btn btn-default btn-danger btn-remove">-</button></span>
+                            </div>
+                        {{/if}}
+                    {{/each}}
                 </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>        
     </div>

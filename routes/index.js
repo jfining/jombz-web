@@ -1,6 +1,8 @@
 const path = require('path');
+const quotesRoute = require('./quotesRoute.js');
 
 const constructorMethod = (app) => {
+    app.use("/902quotes", quotesRoute);
 
     app.use("/devUpdate", (req, res) => {
         const exec = require('child_process').exec;
@@ -18,11 +20,6 @@ const constructorMethod = (app) => {
     app.get("/", (req, res) => {
         console.log("home page visited");
         res.render("home");
-    });
-
-    app.get("/902quotes", (req, res) => {
-        console.log("902quotes route hit");
-        res.render("902quotes");
     });
 
     app.use("*", (req, res) => {
