@@ -2,6 +2,16 @@
 
 This repo is a nodejs application for random asks of the 902 crew.
 
+##Install
+
+Edit the files in config/ to match your set-up.
+
+Copy the jombz-web.conf upstart script to /etc/init/jombz-web.conf to use the following controls:
+
+`$start jombz-web`
+`$stop jombz-web`
+`$restart jombz-web`
+
 ## 902 Quotes
 
 The first module is a web GUI for managing the quotes available to the 902 Quotes Alexa Skill.
