@@ -1,5 +1,0 @@
-{
-    "QUOTES_BUCKET": "s3-bucket-name",
-    "QUOTES_KEY": "quotes-file.json"
-}
-
