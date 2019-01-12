@@ -15,41 +15,50 @@ const constructorMethod = (app) => {
         if (request.cookies.AuthCookie && request.cookies.Username) {
             const authCookie = request.cookies.AuthCookie;
             const username = request.cookies.Username;
-            const user = await userData.getUserByUsername(username);
-    
-            if (user) {
-                if (user.sessions.includes(authCookie)) {
-                    next();
-                    return;
-                    /*
-                    if (request.path === "/private") {
+            try {
+                const user = await userData.getUserByUsername(username);
+                if (user) {
+                    if (user.sessions.includes(authCookie)) {
                         next();
                         return;
+                        /*
+                        if (request.path === "/private") {
+                            next();
+                            return;
+                        }
+                        else {
+                            response.redirect("/private");
+                        }
+                        */
                     }
                     else {
-                        response.redirect("/private");
+                        const renderInfo = {
+                            has_errors: true,
+                            error_message: "Invalid session. Please login again."
+                        };
+                        //need to remove cookies
+                        response.clearCookie("AuthCookie");
+                        response.clearCookie("Username");
+                        response.render("login", renderInfo);
                     }
-                    */
                 }
                 else {
                     const renderInfo = {
-                          has_errors: true,
-                          error_message: "Invalid session. Please login again."
-                      };
-                      //need to remove cookies
-                      response.clearCookie("AuthCookie");
-                      response.clearCookie("Username");
+                        has_errors: true,
+                        error_message: "Invalid session. Please login again."
+                    };
+                    //need to remove cookies here
+                    response.clearCookie("AuthCookie");
+                    response.clearCookie("Username");
                     response.render("login", renderInfo);
                 }
-            }
-            else {
+            } catch(e) {
+                console.log("Error getting user");
+                console.log(e.message);
                 const renderInfo = {
-                      has_errors: true,
-                      error_message: "Invalid session. Please login again."
-                  };
-                //need to remove cookies here
-                response.clearCookie("AuthCookie");
-                response.clearCookie("Username");
+                    has_errors: true,
+                    error_message: e.message
+                };
                 response.render("login", renderInfo);
             }
         }
@@ -84,34 +93,36 @@ const constructorMethod = (app) => {
         else {
             const renderInfo = {
                 has_errors: true,
-                error_message: "Incorrect Username/Password. Please try again."
+                error_message: "Must enter Username and Password. Please try again."
             };	
             response.render("login", renderInfo);
         }
-        
-        const user = await userData.getUserByUsername(username);
-    
-        if (user) {
-            if (await bcrypt.compare(password, user["hashedPassword"])) {
-                sessionId = guid.create().toString();
-                await userData.addSessionForUser(username, sessionId);
-                response.cookie("AuthCookie", sessionId);
-                response.cookie("Username", username);
-                response.redirect("/");
+
+        try {
+            const user = await userData.getUserByUsername(username);
+            if (user) {
+                if (await bcrypt.compare(password, user["hashedPassword"])) {
+                    sessionId = guid.create().toString();
+                    await userData.addSessionForUser(username, sessionId);
+                    response.cookie("AuthCookie", sessionId);
+                    response.cookie("Username", username);
+                    response.redirect("/");
+                }
+                else {
+                    const renderInfo = {
+                        has_errors: true,
+                        error_message: "Incorrect Username/Password. Please try again."
+                    };	
+                    response.render("login", renderInfo);
+                }
             }
-            else {
-                const renderInfo = {
-                    has_errors: true,
-                    error_message: "Incorrect Username/Password. Please try again."
-                };	
-                response.render("login", renderInfo);
-            }
-        }
-        else {
+        } catch(e) {
+            console.log("Error getting user");
+            console.log(e.message);
             const renderInfo = {
                 has_errors: true,
-                error_message: "User not found. Please try again."
-            };	
+                error_message: e.message
+            };
             response.render("login", renderInfo);
         }
     });
@@ -119,8 +130,18 @@ const constructorMethod = (app) => {
     app.get("/private", async function(request, response) {
         if (request.cookies.Username) {
             const username = request.cookies.Username;
-            const user = await userData.getUserByUsername(username);
-            response.render("userInfo", user);
+            try {
+                const user = await userData.getUserByUsername(username);
+                response.render("userInfo", user);
+            } catch(e) {
+                console.log("Error getting user");
+                console.log(e.message);
+                const renderInfo = {
+                    has_errors: true,
+                    error_message: e.message
+                };
+                response.render("login", renderInfo);
+            }
         }
     });
     
@@ -129,11 +150,21 @@ const constructorMethod = (app) => {
             const username = request.cookies.Username;
             if (request.cookies.AuthCookie) {
                 const authCookie = request.cookies.AuthCookie;
-                updatedUser = await userData.removeSessionForUser(username, authCookie);
-                if (updatedUser) {
-                    response.clearCookie("AuthCookie");
-                    response.clearCookie("Username");
-                    response.render("logout");
+                try {
+                    updatedUser = await userData.removeSessionForUser(username, authCookie);
+                    if (updatedUser) {
+                        response.clearCookie("AuthCookie");
+                        response.clearCookie("Username");
+                        response.render("logout");
+                    }
+                } catch(e) {
+                    console.log("Error removing session for user");
+                    console.log(e.message);
+                    const renderInfo = {
+                        has_errors: true,
+                        error_message: e.message
+                    };
+                    response.render("login", renderInfo);
                 }
             }
         }
@@ -170,4 +201,3 @@ const constructorMethod = (app) => {
 };
 
 module.exports = constructorMethod;
-

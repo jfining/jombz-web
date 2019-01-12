@@ -25,7 +25,7 @@ module.exports = {
 		};
 
 		const insertInfo = await usersCollection.insertOne(newUser);
-		if (insertInfo.insertedCount === 0) throw "Could not add user to db.";
+		if (insertInfo.insertedCount === 0) throw new Error("Could not add user to db.");
 
 		const addedUser = await this.getUserById(userId);
 		return addedUser;
@@ -39,7 +39,7 @@ module.exports = {
 		newUser["_id"] = userId;
 
 		const insertInfo = await usersCollection.insertOne(newUser);
-		if (insertInfo.insertedCount === 0) throw "Could not add user to db.";
+		if (insertInfo.insertedCount === 0) throw new Error("Could not add user to db.");
 
 		const addedUser = await this.getUserById(userId);
 		return addedUser;
@@ -58,7 +58,7 @@ module.exports = {
 
 		const user = await usersCollection.findOne({_id:id});
 
-		if (user === null) throw `No user with id=${id}`;
+		if (user === null) throw new Error(`No user with id=${id}`);
 
 		return user;
 	},
@@ -68,7 +68,7 @@ module.exports = {
 
 		const user = await usersCollection.findOne({"username":username});
 
-		if (user === null) throw `No user with username=${username}`;
+		if (user === null) throw new Error(`No user with username=${username}`);
 
 		return user;	
 	},
@@ -108,7 +108,7 @@ module.exports = {
 
 		const deleteInfo = await usersCollection.removeOne({_id: id});
 		if (deleteInfo.deletedCount === 0) {
-			throw `Failed to delete user with id ${id}`
+			throw new Error(`Failed to delete user with id ${id}`);
 		}
 		else return true;
 	},
@@ -131,7 +131,7 @@ module.exports = {
 		}
 		else {
 			//session not found
-			throw `Session not found. session:${id} username:${username}`
+			throw new Error(`Session not found. session:${id} username:${username}`);
 		}
 	}
 }

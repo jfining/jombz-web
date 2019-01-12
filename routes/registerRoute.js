@@ -14,17 +14,27 @@ router.post("/", async function (req, res) {
     //hash the password
     hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
     username = req.body.username;
-    const user = await userData.createUserByParams(username, hashedPassword, "", "", "", "");
-    if (user) {
-        console.log(user);
-        res.redirect("/login");
-    }
-    else {
+    try {
+        const user = await userData.createUserByParams(username, hashedPassword, "", "", "", "");
+        if (user) {
+            console.log(user);
+            res.redirect("/login");
+        }
+        else {
+            const renderInfo = {
+                has_errors: true,
+                error_message: "Failed to create user."
+            };
+            res.render("registerUser", renderInfo);
+        }
+    } catch(e) {
+        console.log("Error creating user");
+        console.log(e.message);
         const renderInfo = {
             has_errors: true,
-            error_message: "Failed to create user."
+            error_message: e.message
         };
-        res.render("registerUser", renderInfo);
+        response.render("registerUser", renderInfo);
     }
 });
 
