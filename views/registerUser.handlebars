@@ -1,0 +1,19 @@
+<section>
+	<p>
+		Please register a new account below.
+	</p>
+	{{#if has_errors}}
+	<p class=error-paragraph>
+		{{error_message}}
+	</p>
+	{{/if}}
+</section>
+<section>
+	<form id="register-user-form" method="POST" action="/register">
+		<label for="usernameField">Username:</label>
+		<input id="usernameField" type="text" name="username" />
+		<label for="passwordField">Password:</label>
+		<input id="passwordField" type="text" name="password" />
+		<input type="submit" value="Submit" />
+	</form>
+</section>

@@ -3,3 +3,6 @@ node_modules/
 npm-debug.log
 aws-creds.json
 config.json
+.DS_Store
+quotes-file.json
+settings.json

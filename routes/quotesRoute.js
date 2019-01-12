@@ -3,11 +3,11 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const AWS = require('aws-sdk');
-const config = require('../config.json');
+const appConfig = require('../config/settings.json').appConfig;
 
 router.get("/", (req, res) => {
     console.log("902quotes route hit");
-    var quotesObject = fs.readFileSync("./"+config.QUOTES_KEY, 'utf-8');
+    var quotesObject = fs.readFileSync("./"+appConfig.QUOTES_KEY, 'utf-8');
     var quotesJson = JSON.parse(quotesObject);
     var quotesArray = quotesJson["quotes"];
     var renderData = {
@@ -25,8 +25,8 @@ router.post("/", (req, res) => {
             dataToWrite.push(quote);
         }
     }
-    fs.writeFileSync(config.QUOTES_KEY, JSON.stringify({quotes:dataToWrite}));
-    AWS.config.loadFromPath('./aws-creds.json');
+    fs.writeFileSync(appConfig.QUOTES_KEY, JSON.stringify({quotes:dataToWrite}));
+    AWS.config.loadFromPath('../config/aws-creds.json');
     var s3 = new AWS.S3();
     fs.readFile("./"+config.QUOTES_KEY, function (err, data) {
         if (err) { throw err; }

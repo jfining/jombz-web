@@ -1,0 +1,22 @@
+<section>
+	<p>
+		Please login below.
+	</p>
+	{{#if has_errors}}
+	<p class=error-paragraph>
+		{{error_message}}
+	</p>
+	{{/if}}
+</section>
+<section>
+	<form id="login-form" method="POST" action="/login">
+		<label for="usernameField">Username:</label>
+		<input id="usernameField" type="text" name="username" />
+		<label for="passwordField">Password:</label>
+		<input id="passwordField" type="text" name="password" />
+		<input type="submit" value="Submit" />
+	</form>
+</section>
+<section>
+	<a href="/register">Create an account</a>
+</section>

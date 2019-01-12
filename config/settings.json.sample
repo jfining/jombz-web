@@ -1,0 +1,12 @@
+{
+    "mongoConfig": {
+      "serverUrl": "mongodb://localhost:27017/",
+      "database": "jombz-web"
+    },
+    "appConfig": {
+      "LISTEN_PORT": 3000,
+      "QUOTES_BUCKET": "s3-bucket-name",
+      "QUOTES_KEY": "quotes-file.json",
+      "BCRYPT_SALT_ROUNDS": 16
+    }
+}
