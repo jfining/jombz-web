@@ -1,11 +1,13 @@
+<div class="col-lg-8 col-md-10 mx-auto">
 <section>
 	<p>
 		Please login below.
 	</p>
 	{{#if has_errors}}
-	<p class=error-paragraph>
-		{{error_message}}
-	</p>
+	<div class="alert alert-danger fade in">
+    	<a href="#" class="close" data-dismiss="alert">&times;</a>
+    	{{error_message}}
+	</div>
 	{{/if}}
 </section>
 <section>
@@ -13,10 +15,11 @@
 		<label for="usernameField">Username:</label>
 		<input id="usernameField" type="text" name="username" />
 		<label for="passwordField">Password:</label>
-		<input id="passwordField" type="text" name="password" />
+		<input id="passwordField" type="password" name="password" />
 		<input type="submit" value="Submit" />
 	</form>
 </section>
 <section>
 	<a href="/register">Create an account</a>
 </section>
+</div>
