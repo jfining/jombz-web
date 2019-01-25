@@ -7,6 +7,7 @@ const appConfig = require('../config/settings.json').appConfig;
 
 router.get("/", (req, res) => {
     console.log("902quotes route hit");
+    console.log(appConfig);
     var quotesObject = fs.readFileSync("./"+appConfig.QUOTES_KEY, 'utf-8');
     var quotesJson = JSON.parse(quotesObject);
     var quotesArray = quotesJson["quotes"];
@@ -26,12 +27,12 @@ router.post("/", (req, res) => {
         }
     }
     fs.writeFileSync(appConfig.QUOTES_KEY, JSON.stringify({quotes:dataToWrite}));
-    AWS.config.loadFromPath('../config/aws-creds.json');
+    AWS.config.loadFromPath('./config/aws-creds.json');
     var s3 = new AWS.S3();
-    fs.readFile("./"+config.QUOTES_KEY, function (err, data) {
+    fs.readFile("./"+appConfig.QUOTES_KEY, function (err, data) {
         if (err) { throw err; }
 
-        params = {Bucket: config.QUOTES_BUCKET, Key: config.QUOTES_KEY, Body: data};
+        params = {Bucket: appConfig.QUOTES_BUCKET, Key: appConfig.QUOTES_KEY, Body: data};
         s3.putObject(params, function(err, data) {
             if (err) {
                 console.log(err);
